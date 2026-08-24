@@ -1,15 +1,24 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { User, onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from '../config/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export type UserRole = 'parent' | 'admin' | null;
 
+export interface AppUser {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL?: string | null;
+}
+
 interface AuthContextType {
-  user: User | null;
+  user: AppUser | null;
   role: UserRole;
   loading: boolean;
   status: 'pending' | 'verified' | null;
+  loginWithEmail: (email: string) => Promise<{ role: UserRole; status: string }>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -17,66 +26,84 @@ const AuthContext = createContext<AuthContextType>({
   role: null,
   loading: true,
   status: null,
+  loginWithEmail: async () => ({ role: 'parent', status: 'verified' }),
+  logout: async () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AppUser | null>(null);
   const [role, setRole] = useState<UserRole>(null);
   const [status, setStatus] = useState<'pending' | 'verified' | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Check role & whitelist in Firestore
+  const checkUserRoleAndWhitelist = async (email: string, uid: string, displayName?: string | null) => {
+    const emailKey = email.toLowerCase().trim();
+    
+    try {
+      // 1. Check if email is in whitelist_admins
+      const whitelistDoc = await getDoc(doc(db, 'whitelist_admins', emailKey));
+      
+      if (whitelistDoc.exists()) {
+        const wlData = whitelistDoc.data();
+        await setDoc(doc(db, 'users', uid), {
+          uid: uid,
+          name: wlData.namaLengkap || displayName || email.split('@')[0],
+          email: email,
+          role: 'admin',
+          status_verifikasi: 'verified',
+          createdAt: new Date().toISOString()
+        }, { merge: true });
+        
+        setRole('admin');
+        setStatus('verified');
+        return { role: 'admin' as UserRole, status: 'verified' };
+      }
+
+      // 2. Check users collection
+      const userDoc = await getDoc(doc(db, 'users', uid));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        const userRole = (userData.role || 'parent') as UserRole;
+        const userStatus = (userData.status_verifikasi || 'verified') as 'pending' | 'verified';
+        setRole(userRole);
+        setStatus(userStatus);
+        return { role: userRole, status: userStatus };
+      }
+
+      // 3. New parent user default
+      await setDoc(doc(db, 'users', uid), {
+        uid: uid,
+        name: displayName || email.split('@')[0],
+        email: email,
+        role: 'parent',
+        status_verifikasi: 'verified',
+        createdAt: new Date().toISOString()
+      }, { merge: true });
+
+      setRole('parent');
+      setStatus('verified');
+      return { role: 'parent' as UserRole, status: 'verified' };
+    } catch (error) {
+      console.error("Error checking role:", error);
+      setRole('parent');
+      setStatus('verified');
+      return { role: 'parent' as UserRole, status: 'verified' };
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        // Fetch user role from Firestore
-        try {
-          const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            setRole(userData.role || 'parent');
-            setStatus(userData.status_verifikasi || 'verified');
-          } else {
-            // Check if user's email is whitelisted as admin by Superadmin
-            const emailKey = (currentUser.email || '').toLowerCase().trim();
-            const whitelistDoc = await getDoc(doc(db, 'whitelist_admins', emailKey));
-            
-            if (whitelistDoc.exists()) {
-              const wlData = whitelistDoc.data();
-              // Save user as admin in users collection
-              await setDoc(doc(db, 'users', currentUser.uid), {
-                uid: currentUser.uid,
-                name: wlData.namaLengkap || currentUser.displayName || '',
-                email: currentUser.email,
-                role: 'admin',
-                status_verifikasi: 'verified',
-                institusi: wlData.institusi || '',
-                kota: wlData.kota || '',
-                wilayah: wlData.wilayah || '',
-                jenisNakes: wlData.jenisNakes || '',
-                strNomor: wlData.strNomor || '',
-                noTelp: wlData.noTelp || '',
-                createdAt: new Date().toISOString()
-              });
-              setRole('admin');
-              setStatus('verified');
-            } else {
-              // New parent user, defaults
-              setRole('parent');
-              setStatus('verified');
-            }
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-          setRole('parent');
-          setStatus('verified');
-        }
-      } else {
-        setUser(null);
-        setRole(null);
-        setStatus(null);
+      if (currentUser && currentUser.email) {
+        setUser({
+          uid: currentUser.uid,
+          email: currentUser.email,
+          displayName: currentUser.displayName,
+          photoURL: currentUser.photoURL,
+        });
+        await checkUserRoleAndWhitelist(currentUser.email, currentUser.uid, currentUser.displayName);
       }
       setLoading(false);
     });
@@ -84,8 +111,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return unsubscribe;
   }, []);
 
+  const loginWithEmail = async (rawEmail: string) => {
+    const email = rawEmail.trim().toLowerCase();
+    const mockUid = 'usr_' + email.replace(/[^a-zA-Z0-9]/g, '_');
+    
+    const appUser: AppUser = {
+      uid: mockUid,
+      email: email,
+      displayName: email.split('@')[0],
+    };
+    
+    setUser(appUser);
+    const result = await checkUserRoleAndWhitelist(email, mockUid, appUser.displayName);
+    return result;
+  };
+
+  const logout = async () => {
+    try {
+      await auth.signOut();
+    } catch (e) {
+      console.error(e);
+    }
+    setUser(null);
+    setRole(null);
+    setStatus(null);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, role, loading, status }}>
+    <AuthContext.Provider value={{ user, role, loading, status, loginWithEmail, logout }}>
       {children}
     </AuthContext.Provider>
   );
