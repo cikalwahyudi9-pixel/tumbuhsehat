@@ -139,7 +139,7 @@ export default function TambahAnakScreen() {
                 value={dateObj}
                 mode="date"
                 is24Hour={true}
-                display="default"
+                display="spinner"
                 onChange={onChangeDate}
                 maximumDate={new Date()}
               />
