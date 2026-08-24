@@ -1,0 +1,234 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-tint": "#4e5e82", "secondary": "#5d5f5f", "on-primary": "#ffffff", "primary-fixed": "#d8e2ff", "outline-variant": "#c5c6cf", "primary-container": "#1a2b4c", "inverse-primary": "#b6c6f0", "tertiary-fixed-dim": "#eabf8a", "on-tertiary-container": "#b28c5b", "on-surface-variant": "#44474e", "surface": "#f7f9fb", "on-secondary-fixed": "#1a1c1c", "on-error": "#ffffff", "surface-dim": "#d8dadc", "primary-fixed-dim": "#b6c6f0", "background": "#f7f9fb", "error-container": "#ffdad6", "surface-container-highest": "#e0e3e5", "on-surface": "#191c1e", "surface-container-lowest": "#ffffff", "secondary-fixed": "#e2e2e2", "on-primary-container": "#8293ba", "primary": "#031636", "on-primary-fixed": "#071b3b", "on-primary-fixed-variant": "#364669", "secondary-fixed-dim": "#c6c6c7", "on-tertiary-fixed": "#2a1800", "surface-container": "#eceef0", "surface-container-high": "#e6e8ea", "on-background": "#191c1e", "error": "#ba1a1a", "surface-container-low": "#f2f4f6", "on-secondary": "#ffffff", "secondary-container": "#dfe0e0", "on-tertiary": "#ffffff", "on-secondary-container": "#616363", "inverse-surface": "#2d3133", "on-tertiary-fixed-variant": "#5e4117", "on-error-container": "#93000a", "tertiary-container": "#3f2600", "inverse-on-surface": "#eff1f3", "tertiary": "#241300", "outline": "#75777f", "tertiary-fixed": "#ffddb5", "surface-variant": "#e0e3e5", "on-secondary-fixed-variant": "#454747", "surface-bright": "#f7f9fb" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "sm": "8px", "lg": "24px", "md": "16px", "margin-mobile": "16px", "xxl": "48px", "margin-desktop": "40px", "xl": "32px", "gutter": "24px", "xs": "4px", "base": "8px" }, "fontFamily": { "headline-md": ["Inter"], "headline-lg-mobile": ["Inter"], "body-md": ["Inter"], "headline-lg": ["Inter"], "display-lg": ["Inter"], "body-lg": ["Inter"], "caption": ["Inter"], "label-md": ["Inter"], "title-lg": ["Inter"] }, "fontSize": { "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }], "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }], "caption": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "600" }] } } } };</script><style>@layer base { body { -webkit-tap-highlight-color: transparent; overscroll-behavior-y: contain; } .pt-safe { padding-top: env(safe-area-inset-top); } .pb-safe { padding-bottom: env(safe-area-inset-bottom); } }</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface text-on-surface font-body-md"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center h-16 px-margin-mobile gap-md"><button class="w-10 h-10 flex items-center justify-center text-on-surface-variant" onclick="history.back()"><span class="material-symbols-outlined">arrow_back</span></button><span class="font-title-lg text-title-lg text-primary">Analytics</span><div class="ml-auto"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRPd3YKzA33bsJ86z7vxpWSgRcdFxt40cQUcYTRY7thRLYZkXpPIOeEWJbug5HQcONLx60Ri2RwG09eCyW1Y-jjazkaDkUjOGgCRP5UJ0N6FuiJpPvoRyEZowoIFIQiIwxIO2G6ylzugNrY8GaioTWgwPOJ6Mp_H3Ki_6Xmcd3k8inSAkQyrdVnbmQawYAzNno_qqsiIx3jzgW-qguHgi9Loq4hycCwliijbxeEW49a7x2BoxW6B4n"></div></div></header><main class="pt-16 bg-surface min-h-screen pb-safe"><div class="flex flex-col w-full gap-xxl pb-margin-mobile">
+<!-- Header Area -->
+<section class="px-margin-mobile flex flex-col gap-md">
+<div class="flex flex-col gap-xs">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Regional Stunting Trends</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Monitoring data across integrated healthcare centers (Posyandu) over the last 6 months.</p>
+</div>
+<!-- Segmented Control for Region -->
+<div class="bg-surface-container-high rounded-lg p-1 flex gap-1 relative overflow-hidden" id="region-segment">
+<div class="absolute bg-surface shadow-sm rounded-md transition-all duration-300 ease-in-out h-[calc(100%-8px)] top-1 left-1 w-[calc(33.333%-2px)] z-0" id="segment-indicator"></div>
+<button class="flex-1 relative z-10 py-sm font-label-md text-label-md text-primary transition-colors text-center segment-btn" data-index="0" data-value="puskesmas-a">
+                Puskesmas A
+            </button>
+<button class="flex-1 relative z-10 py-sm font-label-md text-label-md text-on-surface-variant transition-colors text-center segment-btn" data-index="1" data-value="puskesmas-b">
+                Puskesmas B
+            </button>
+<button class="flex-1 relative z-10 py-sm font-label-md text-label-md text-on-surface-variant transition-colors text-center segment-btn" data-index="2" data-value="puskesmas-c">
+                Puskesmas C
+            </button>
+</div>
+</section>
+<!-- Main Chart Section -->
+<section class="flex flex-col relative w-full">
+<div class="px-margin-mobile flex justify-between items-end mb-md">
+<div class="flex flex-col">
+<span class="font-caption text-caption text-on-surface-variant uppercase tracking-wider">Average Rate</span>
+<div class="flex items-baseline gap-xs">
+<span class="font-display-lg text-display-lg text-primary" id="main-stat-value">14.2</span>
+<span class="font-title-lg text-title-lg text-primary">%</span>
+</div>
+</div>
+<div class="bg-primary/10 rounded-full px-md py-xs flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">trending_down</span>
+<span class="font-label-md text-label-md text-primary">-2.4% vs prev</span>
+</div>
+</div>
+<!-- Full width Chart Area -->
+<div class="relative w-full h-64 bg-surface" id="chart-container">
+<!-- SVG Chart -->
+<svg class="absolute inset-0 w-full h-full" id="trend-chart" preserveAspectRatio="none" viewBox="0 0 400 200">
+<defs>
+<linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#031636" stop-opacity="0.15"></stop>
+<stop offset="100%" stop-color="#031636" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+<!-- Grid Lines -->
+<line stroke="#F1F5F9" stroke-width="1" x1="0" x2="400" y1="40" y2="40"></line>
+<line stroke="#F1F5F9" stroke-width="1" x1="0" x2="400" y1="90" y2="90"></line>
+<line stroke="#F1F5F9" stroke-width="1" x1="0" x2="400" y1="140" y2="140"></line>
+<line stroke="#F1F5F9" stroke-width="1" x1="0" x2="400" y1="190" y2="190"></line>
+<!-- Area Fill -->
+<path class="transition-all duration-700 ease-in-out" d="M0,150 L66,120 L132,130 L198,90 L264,100 L330,60 L400,70 L400,200 L0,200 Z" fill="url(#chartGradient)" id="chart-area-path"></path>
+<!-- Line Stroke -->
+<path class="transition-all duration-700 ease-in-out" d="M0,150 L66,120 L132,130 L198,90 L264,100 L330,60 L400,70" fill="none" id="chart-line-path" stroke="#031636" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+<!-- Data Points -->
+<g class="transition-all duration-700 ease-in-out" id="chart-points">
+<circle cx="0" cy="150" fill="#ffffff" r="4" stroke="#031636" stroke-width="2"></circle>
+<circle cx="66" cy="120" fill="#ffffff" r="4" stroke="#031636" stroke-width="2"></circle>
+<circle cx="132" cy="130" fill="#ffffff" r="4" stroke="#031636" stroke-width="2"></circle>
+<circle cx="198" cy="90" fill="#ffffff" r="4" stroke="#031636" stroke-width="2"></circle>
+<circle cx="264" cy="100" fill="#ffffff" r="4" stroke="#031636" stroke-width="2"></circle>
+<circle cx="330" cy="60" fill="#ffffff" r="4" stroke="#031636" stroke-width="2"></circle>
+<circle cx="400" cy="70" fill="#ffffff" r="4" stroke="#031636" stroke-width="2"></circle>
+</g>
+</svg>
+<!-- X-Axis Labels -->
+<div class="absolute bottom-0 w-full flex justify-between px-margin-mobile text-caption font-caption text-on-surface-variant pt-sm transform translate-y-full">
+<span>Jan</span>
+<span>Feb</span>
+<span>Mar</span>
+<span>Apr</span>
+<span>May</span>
+<span>Jun</span>
+</div>
+</div>
+</section>
+<!-- Key Metrics Grid -->
+<section class="px-margin-mobile mt-xl">
+<h2 class="font-title-lg text-title-lg text-on-surface mb-md">Key Indicators</h2>
+<div class="grid grid-cols-2 gap-md">
+<!-- Metric 1 -->
+<div class="bg-surface-container rounded-xl p-md flex flex-col gap-sm shadow-[0_10px_20px_rgba(3,22,54,0.04)]">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">monitor_weight</span>
+</div>
+<div>
+<div class="font-caption text-caption text-on-surface-variant mb-xs">Screened Children</div>
+<div class="font-headline-md text-headline-md text-on-surface">1,245</div>
+</div>
+<div class="w-full bg-surface-variant h-1 rounded-full overflow-hidden mt-xs">
+<div class="bg-primary h-full rounded-full w-[85%]"></div>
+</div>
+<div class="font-caption text-caption text-primary flex justify-end">85% Target</div>
+</div>
+<!-- Metric 2 -->
+<div class="bg-surface-container rounded-xl p-md flex flex-col gap-sm shadow-[0_10px_20px_rgba(3,22,54,0.04)]">
+<div class="w-10 h-10 rounded-full bg-error-container flex items-center justify-center text-on-error-container">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<div>
+<div class="font-caption text-caption text-on-surface-variant mb-xs">Intervention Needed</div>
+<div class="font-headline-md text-headline-md text-on-surface">176</div>
+</div>
+<div class="flex items-center gap-xs mt-auto">
+<span class="material-symbols-outlined text-[14px] text-error">trending_up</span>
+<span class="font-caption text-caption text-error">+12 this month</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Data Table Summary -->
+<section class="px-margin-mobile">
+<h2 class="font-title-lg text-title-lg text-on-surface mb-md">Recent Posyandu Reports</h2>
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_10px_20px_rgba(3,22,54,0.04)] overflow-hidden">
+<!-- Row 1 -->
+<div class="flex items-center justify-between p-md bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div>
+<div class="font-label-md text-label-md text-on-surface">Mawar Indah</div>
+<div class="font-caption text-caption text-on-surface-variant">Submitted today</div>
+</div>
+</div>
+<span class="px-sm py-xs bg-primary/10 text-primary font-caption text-caption rounded-full">Reviewed</span>
+</div>
+<div class="h-[1px] w-full bg-surface-variant ml-xl"></div>
+<!-- Row 2 -->
+<div class="flex items-center justify-between p-md bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-2 h-2 rounded-full bg-primary/40"></div>
+<div>
+<div class="font-label-md text-label-md text-on-surface">Melati Suci</div>
+<div class="font-caption text-caption text-on-surface-variant">Submitted yesterday</div>
+</div>
+</div>
+<span class="px-sm py-xs bg-surface-variant text-on-surface-variant font-caption text-caption rounded-full">Pending</span>
+</div>
+<div class="h-[1px] w-full bg-surface-variant ml-xl"></div>
+<!-- Row 3 -->
+<div class="flex items-center justify-between p-md bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div>
+<div class="font-label-md text-label-md text-on-surface">Kenanga Satu</div>
+<div class="font-caption text-caption text-on-surface-variant">Submitted 3 days ago</div>
+</div>
+</div>
+<span class="px-sm py-xs bg-primary/10 text-primary font-caption text-caption rounded-full">Reviewed</span>
+</div>
+</div>
+<button class="w-full mt-md py-sm font-label-md text-label-md text-primary text-center">
+            View All Reports
+        </button>
+</section>
+<!-- Bottom Action Area (Sticky) -->
+<div class="fixed bottom-0 left-0 w-full bg-surface/90 backdrop-blur-md px-margin-mobile py-md z-40 pb-safe">
+<button class="w-full bg-primary text-on-primary font-label-md text-label-md py-[16px] rounded-lg flex items-center justify-center gap-sm shadow-md active:scale-[0.98] transition-transform">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+            Export Laporan (PDF)
+        </button>
+</div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const buttons = document.querySelectorAll('.segment-btn');
+        const indicator = document.getElementById('segment-indicator');
+        
+        // Mock data for chart updates
+        const chartData = {
+            'puskesmas-a': {
+                val: '14.2',
+                pathStr: 'M0,150 L66,120 L132,130 L198,90 L264,100 L330,60 L400,70',
+                areaStr: 'M0,150 L66,120 L132,130 L198,90 L264,100 L330,60 L400,70 L400,200 L0,200 Z',
+                points: [[0,150], [66,120], [132,130], [198,90], [264,100], [330,60], [400,70]]
+            },
+            'puskesmas-b': {
+                val: '16.8',
+                pathStr: 'M0,130 L66,140 L132,110 L198,120 L264,80 L330,90 L400,50',
+                areaStr: 'M0,130 L66,140 L132,110 L198,120 L264,80 L330,90 L400,50 L400,200 L0,200 Z',
+                points: [[0,130], [66,140], [132,110], [198,120], [264,80], [330,90], [400,50]]
+            },
+            'puskesmas-c': {
+                val: '11.5',
+                pathStr: 'M0,170 L66,160 L132,150 L198,140 L264,130 L330,110 L400,90',
+                areaStr: 'M0,170 L66,160 L132,150 L198,140 L264,130 L330,110 L400,90 L400,200 L0,200 Z',
+                points: [[0,170], [66,160], [132,150], [198,140], [264,130], [330,110], [400,90]]
+            }
+        };
+
+        const updateChart = (regionKey) => {
+            const data = chartData[regionKey];
+            if(!data) return;
+            
+            document.getElementById('main-stat-value').textContent = data.val;
+            document.getElementById('chart-line-path').setAttribute('d', data.pathStr);
+            document.getElementById('chart-area-path').setAttribute('d', data.areaStr);
+            
+            const pointsGrp = document.getElementById('chart-points');
+            const circles = pointsGrp.querySelectorAll('circle');
+            data.points.forEach((pt, i) => {
+                if(circles[i]) {
+                    circles[i].setAttribute('cx', pt[0]);
+                    circles[i].setAttribute('cy', pt[1]);
+                }
+            });
+        };
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Update styling
+                buttons.forEach(b => {
+                    b.classList.remove('text-primary');
+                    b.classList.add('text-on-surface-variant');
+                });
+                e.target.classList.remove('text-on-surface-variant');
+                e.target.classList.add('text-primary');
+
+                // Move indicator
+                const index = parseInt(e.target.getAttribute('data-index'));
+                indicator.style.transform = `translateX(${index * 100}%)`;
+                
+                // Animate Chart
+                updateChart(e.target.getAttribute('data-value'));
+            });
+        });
+    });
+</script></main></body></html>

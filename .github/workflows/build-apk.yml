@@ -1,0 +1,83 @@
+name: Build Android APK
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build TumbuhSehat Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: |
+            mobile/package-lock.json
+            package-lock.json
+
+      - name: ☕ Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: 📱 Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 🐘 Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: 📦 Install Dependencies
+        run: |
+          if [ -d "mobile" ]; then
+            cd mobile
+          fi
+          npm install
+
+      - name: ⚙️ Expo Prebuild (Generate Android Project)
+        run: |
+          if [ -d "mobile" ]; then
+            cd mobile
+          fi
+          npx expo prebuild --platform android --clean
+
+      - name: 🔨 Build Android APK with Gradle
+        run: |
+          if [ -d "mobile" ]; then
+            cd mobile/android
+          else
+            cd android
+          fi
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: 🔍 Locate Generated APK
+        id: find_apk
+        run: |
+          APK_PATH=$(find . -name "*.apk" | head -n 1)
+          echo "Found APK at: $APK_PATH"
+          echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
+
+      - name: 🚀 Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TumbuhSehat-App-Debug.apk
+          path: ${{ steps.find_apk.outputs.apk_path }}
+          retention-days: 30
+
+      - name: 📢 Release Summary
+        run: |
+          echo "### 📱 APK Berhasil Dibuat! 🎉" >> $GITHUB_STEP_SUMMARY
+          echo "File APK siap diunduh di bagian **Artifacts** di atas." >> $GITHUB_STEP_SUMMARY
+          echo "- **Nama Aplikasi:** TumbuhSehat" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tipe Build:** Android Debug APK (Bisa langsung diinstall di semua HP Android)" >> $GITHUB_STEP_SUMMARY

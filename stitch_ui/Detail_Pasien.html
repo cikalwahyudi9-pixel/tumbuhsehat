@@ -1,0 +1,208 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-tint": "#4e5e82", "secondary": "#5d5f5f", "on-primary": "#ffffff", "primary-fixed": "#d8e2ff", "outline-variant": "#c5c6cf", "primary-container": "#1a2b4c", "inverse-primary": "#b6c6f0", "tertiary-fixed-dim": "#eabf8a", "on-tertiary-container": "#b28c5b", "on-surface-variant": "#44474e", "surface": "#f7f9fb", "on-secondary-fixed": "#1a1c1c", "on-error": "#ffffff", "surface-dim": "#d8dadc", "primary-fixed-dim": "#b6c6f0", "background": "#f7f9fb", "error-container": "#ffdad6", "surface-container-highest": "#e0e3e5", "on-surface": "#191c1e", "surface-container-lowest": "#ffffff", "secondary-fixed": "#e2e2e2", "on-primary-container": "#8293ba", "primary": "#031636", "on-primary-fixed": "#071b3b", "on-primary-fixed-variant": "#364669", "secondary-fixed-dim": "#c6c6c7", "on-tertiary-fixed": "#2a1800", "surface-container": "#eceef0", "surface-container-high": "#e6e8ea", "on-background": "#191c1e", "error": "#ba1a1a", "surface-container-low": "#f2f4f6", "on-secondary": "#ffffff", "secondary-container": "#dfe0e0", "on-tertiary": "#ffffff", "on-secondary-container": "#616363", "inverse-surface": "#2d3133", "on-tertiary-fixed-variant": "#5e4117", "on-error-container": "#93000a", "tertiary-container": "#3f2600", "inverse-on-surface": "#eff1f3", "tertiary": "#241300", "outline": "#75777f", "tertiary-fixed": "#ffddb5", "surface-variant": "#e0e3e5", "on-secondary-fixed-variant": "#454747", "surface-bright": "#f7f9fb" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "sm": "8px", "lg": "24px", "md": "16px", "margin-mobile": "16px", "xxl": "48px", "margin-desktop": "40px", "xl": "32px", "gutter": "24px", "xs": "4px", "base": "8px" }, "fontFamily": { "headline-md": ["Inter"], "headline-lg-mobile": ["Inter"], "body-md": ["Inter"], "headline-lg": ["Inter"], "display-lg": ["Inter"], "body-lg": ["Inter"], "caption": ["Inter"], "label-md": ["Inter"], "title-lg": ["Inter"] }, "fontSize": { "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }], "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }], "caption": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "600" }] } } } };</script><style>@layer base { body { -webkit-tap-highlight-color: transparent; overscroll-behavior-y: contain; } .pt-safe { padding-top: env(safe-area-inset-top); } .pb-safe { padding-bottom: env(safe-area-inset-bottom); } }</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface text-on-surface font-body-md"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center h-16 px-margin-mobile gap-md"><button class="w-10 h-10 flex items-center justify-center text-on-surface-variant" onclick="history.back()"><span class="material-symbols-outlined">arrow_back</span></button><span class="font-title-lg text-title-lg text-primary">Patients</span><div class="ml-auto"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRPd3YKzA33bsJ86z7vxpWSgRcdFxt40cQUcYTRY7thRLYZkXpPIOeEWJbug5HQcONLx60Ri2RwG09eCyW1Y-jjazkaDkUjOGgCRP5UJ0N6FuiJpPvoRyEZowoIFIQiIwxIO2G6ylzugNrY8GaioTWgwPOJ6Mp_H3Ki_6Xmcd3k8inSAkQyrdVnbmQawYAzNno_qqsiIx3jzgW-qguHgi9Loq4hycCwliijbxeEW49a7x2BoxW6B4n"></div></div></header><main class="pt-16 bg-surface min-h-screen pb-safe"><div class="flex flex-col w-full relative h-full">
+<!-- Content Area -->
+<div class="flex flex-col gap-xxl px-margin-mobile pt-lg pb-[120px] overflow-y-auto">
+<!-- Header Section: Patient Quick Info & Growth Chart -->
+<section class="flex flex-col gap-md animate-[fadeIn_0.5s_ease-out]">
+<div class="flex items-center gap-md">
+<div class="relative w-16 h-16 shrink-0 rounded-full overflow-hidden shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A gentle, high-quality photograph of a healthy, smiling Indonesian toddler boy, approx 2 years old, soft natural lighting, medical clinic setting, premium modern aesthetic, subtle depth of field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeYxOBCi5SBIrzm_FqozsTXF1vI-S5ZWtISr3_AhMZBIj7zUEEBCuLs1baW_3wuL-Bt8rudiH4Ngvc7Pn3SEaoxRj4gD6TV6kzvNo5TTkbrCJhJNd18ako0Xk2z-_-lao_E8d-PVxx4fbwQUrUufVT1C1h4Bwioeb9j1d1YnHqq2Ns0_sRqYehVLJvM_ep4LjBCsnhyV0nIg7w6TPf6Iv6NRH9tNIo9R9SWcdtf8H90-XXu8ocLaE_">
+<div class="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-[#10b981] shadow-sm z-10 border-2 border-surface"></div>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<h2 class="text-headline-md font-headline-md text-on-surface truncate text-primary">Ananda Rayhan</h2>
+<div class="flex items-center gap-xs text-body-md font-body-md text-on-surface-variant truncate">
+<span>Laki-laki</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>2 Tahun 4 Bulan</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span>RM: 19842-A</span>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+<!-- Growth Chart Card (Glassmorphism inspired) -->
+<div class="bg-surface-container-lowest/60 backdrop-blur-[12px] shadow-[0_10px_20px_rgba(3,22,54,0.04)] rounded-xl p-md flex flex-col gap-md relative overflow-hidden">
+<!-- Subtle inner stroke effect via inset shadow -->
+<div class="absolute inset-0 rounded-xl shadow-[inset_0_0_0_0.5px_#ffffff] pointer-events-none"></div>
+<div class="flex justify-between items-center z-10">
+<h3 class="text-title-lg font-title-lg text-primary">Kurva Pertumbuhan</h3>
+<div class="flex gap-sm">
+<span class="flex items-center gap-xs text-caption font-caption text-on-surface-variant bg-surface-container rounded-full px-sm py-[2px] shadow-sm">
+<span class="w-2 h-2 rounded-full bg-[#10b981]"></span> BB
+                </span>
+<span class="flex items-center gap-xs text-caption font-caption text-on-surface-variant bg-surface-container rounded-full px-sm py-[2px] shadow-sm">
+<span class="w-2 h-2 rounded-full bg-[#031636]"></span> TB
+                </span>
+</div>
+</div>
+<!-- Inline SVG Chart -->
+<div class="h-32 w-full relative z-10 flex items-end justify-between pt-sm">
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-6">
+<div class="w-full h-px bg-[#F1F5F9]/50"></div>
+<div class="w-full h-px bg-[#F1F5F9]/50"></div>
+<div class="w-full h-px bg-[#F1F5F9]/50"></div>
+</div>
+<!-- Chart Paths (Decorative) -->
+<svg class="absolute inset-0 w-full h-[calc(100%-24px)] overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 100">
+<defs>
+<linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#10b981" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#10b981" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+<path d="M0,90 Q20,80 40,60 T80,30 T100,20 L100,100 L0,100 Z" fill="url(#chartGradient)"></path>
+<path d="M0,90 Q20,80 40,60 T80,30 T100,20" fill="none" stroke="#10b981" stroke-linecap="round" stroke-width="2"></path>
+<!-- Height Path -->
+<path d="M0,70 Q25,65 50,45 T85,25 T100,15" fill="none" stroke="#031636" stroke-dasharray="4 4" stroke-linecap="round" stroke-width="2"></path>
+<!-- Data Points -->
+<circle cx="40" cy="60" fill="#ffffff" r="3" stroke="#10b981" stroke-width="1.5"></circle>
+<circle cx="80" cy="30" fill="#ffffff" r="3" stroke="#10b981" stroke-width="1.5"></circle>
+<circle cx="50" cy="45" fill="#ffffff" r="3" stroke="#031636" stroke-width="1.5"></circle>
+<circle cx="85" cy="25" fill="#ffffff" r="3" stroke="#031636" stroke-width="1.5"></circle>
+</svg>
+<!-- X Axis Labels -->
+<div class="absolute bottom-0 w-full flex justify-between text-[10px] font-caption text-on-surface-variant px-1">
+<span>Bulan 1</span>
+<span>Bulan 6</span>
+<span>Bulan 12</span>
+<span>Bulan 18</span>
+<span>Bulan 24</span>
+</div>
+</div>
+<!-- Stat Summary -->
+<div class="grid grid-cols-2 gap-sm mt-xs z-10">
+<div class="bg-surface-container/50 rounded-lg p-sm flex flex-col shadow-sm">
+<span class="text-caption font-caption text-on-surface-variant mb-xs">Berat Badan</span>
+<div class="flex items-baseline gap-xs">
+<span class="text-headline-md font-headline-md text-primary">12.5</span>
+<span class="text-label-md font-label-md text-on-surface-variant">kg</span>
+</div>
+<span class="text-[10px] text-[#10b981] font-caption flex items-center mt-xs"><span class="material-symbols-outlined text-[12px] mr-1">trending_up</span>+0.4kg (Normal)</span>
+</div>
+<div class="bg-surface-container/50 rounded-lg p-sm flex flex-col shadow-sm">
+<span class="text-caption font-caption text-on-surface-variant mb-xs">Tinggi Badan</span>
+<div class="flex items-baseline gap-xs">
+<span class="text-headline-md font-headline-md text-primary">88.2</span>
+<span class="text-label-md font-label-md text-on-surface-variant">cm</span>
+</div>
+<span class="text-[10px] text-[#10b981] font-caption flex items-center mt-xs"><span class="material-symbols-outlined text-[12px] mr-1">trending_up</span>+1.2cm (Normal)</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Parent Info Section -->
+<section class="flex flex-col gap-sm animate-[fadeIn_0.6s_ease-out]">
+<h3 class="text-title-lg font-title-lg text-primary px-xs">Informasi Orang Tua</h3>
+<div class="bg-surface-container-lowest rounded-xl p-md flex flex-col gap-md shadow-[0_10px_20px_rgba(3,22,54,0.03)] relative overflow-hidden">
+<div class="absolute inset-0 rounded-xl shadow-[inset_0_0_0_0.5px_#E2E8F0] pointer-events-none"></div>
+<div class="flex items-start gap-md relative z-10">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">face_4</span>
+</div>
+<div class="flex flex-col flex-1">
+<span class="text-label-md font-label-md text-on-surface">Ibu Siti Nurbaya</span>
+<span class="text-caption font-caption text-on-surface-variant mt-xs">Hubungan: Ibu Kandung</span>
+<div class="flex items-center gap-xs mt-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">call</span>
+<span class="text-body-md font-body-md text-on-surface">+62 812 3456 7890</span>
+</div>
+</div>
+<button class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary shrink-0 hover:bg-primary-container/40 transition-colors">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Follow Up Notes (Chat Thread) -->
+<section class="flex flex-col gap-sm animate-[fadeIn_0.7s_ease-out]">
+<div class="flex justify-between items-center px-xs">
+<h3 class="text-title-lg font-title-lg text-primary">Catatan Medis</h3>
+<span class="text-caption font-caption text-on-surface-variant bg-surface-container px-sm py-xs rounded-full shadow-sm">3 Entri Baru</span>
+</div>
+<div class="flex flex-col gap-md pt-sm">
+<!-- Note Item (Doctor) -->
+<div class="flex gap-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[16px]">stethoscope</span>
+</div>
+<div class="flex flex-col flex-1">
+<div class="flex items-baseline justify-between mb-xs">
+<span class="text-label-md font-label-md text-on-surface">Dr. Hendra (Anda)</span>
+<span class="text-caption font-caption text-on-surface-variant">Hari ini, 09:30</span>
+</div>
+<div class="bg-primary/5 rounded-2xl rounded-tl-sm p-sm text-body-md font-body-md text-on-surface shadow-sm relative">
+                         Kondisi stabil. Imunisasi DPT lanjutan telah diberikan. Edukasi orang tua mengenai kemungkinan demam ringan 24 jam ke depan. Paracetamol diresepkan p.r.n.
+                     </div>
+</div>
+</div>
+<!-- Divider Date -->
+<div class="flex items-center justify-center my-xs">
+<span class="text-caption font-caption text-on-surface-variant bg-surface-container px-3 py-1 rounded-full shadow-sm">12 Okt 2023</span>
+</div>
+<!-- Note Item (Nurse/Assistant) -->
+<div class="flex gap-sm">
+<div class="w-8 h-8 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary-container shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[16px]">medical_services</span>
+</div>
+<div class="flex flex-col flex-1">
+<div class="flex items-baseline justify-between mb-xs">
+<span class="text-label-md font-label-md text-on-surface">Suster Rini</span>
+<span class="text-caption font-caption text-on-surface-variant">14:15</span>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl rounded-tl-sm p-sm text-body-md font-body-md text-on-surface shadow-[0_4px_10px_rgba(0,0,0,0.03)] relative">
+                         Pengecekan BB &amp; TB rutinan. Ibu melaporkan anak sedikit rewel saat makan malam, namun nafsu makan membaik hari ini.
+                         <div class="absolute inset-0 rounded-2xl rounded-tl-sm shadow-[inset_0_0_0_0.5px_#E2E8F0] pointer-events-none"></div>
+</div>
+<!-- Actionable Chip inside note -->
+<div class="flex gap-xs mt-2">
+<span class="inline-flex items-center gap-xs px-2 py-1 rounded-md bg-secondary-container/30 text-caption font-caption text-on-secondary-container shadow-sm">
+<span class="material-symbols-outlined text-[14px]">attachment</span> Lab_Result_Oct.pdf
+                         </span>
+</div>
+</div>
+</div>
+<!-- Empty space for scrolling padding -->
+<div class="h-8"></div>
+</div>
+</section>
+</div>
+<!-- Floating Input Bar -->
+<div class="fixed bottom-0 left-0 w-full px-margin-mobile pb-safe pt-md bg-surface/90 backdrop-blur-xl shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-40">
+<div class="flex items-center gap-sm bg-surface-container-lowest rounded-full p-sm shadow-[0_4px_12px_rgba(3,22,54,0.08)] relative mb-md">
+<div class="absolute inset-0 rounded-full shadow-[inset_0_0_0_1px_#E2E8F0] pointer-events-none focus-within:shadow-[inset_0_0_0_2px_#031636] transition-shadow"></div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-primary shrink-0 hover:bg-primary/5 transition-colors z-10">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<input class="flex-1 bg-transparent text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none px-2 z-10 py-3" placeholder="Tulis catatan tindak lanjut..." type="text">
+<button class="w-10 h-10 rounded-full bg-[#10b981] flex items-center justify-center text-white shrink-0 hover:bg-[#059669] transition-colors shadow-sm z-10">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</div>
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+<script>
+    // Simple script to handle input focus state styling if needed for browsers that don't support focus-within well, though tailwind handles it mostly.
+    document.addEventListener('DOMContentLoaded', () => {
+        const input = document.querySelector('input[type="text"]');
+        const container = input.closest('.relative');
+        
+        input.addEventListener('focus', () => {
+            // Focus logic handled by tailwind class 'focus-within:'
+        });
+    });
+  </script>
+</div></main></body></html>
