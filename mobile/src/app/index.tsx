@@ -2,51 +2,39 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  Image,
   TouchableOpacity,
   SafeAreaView,
-  Dimensions,
-  TextInput,
-  Modal,
   ActivityIndicator,
+  Alert,
+  Platform,
+  Image,
 } from 'react-native';
 import tw from 'twrnc';
 import Svg, { Path } from 'react-native-svg';
 import { useRouter } from 'expo-router';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { GoogleAuthProvider, signInWithCredential, signInWithPopup } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../config/firebase';
 import { useAuth } from '../context/AuthContext';
 
-const { width } = Dimensions.get('window');
+// Web Client ID dari Firebase Authentication > Google provider
+const WEB_CLIENT_ID = '79655128399-o9qjm8vmjqoef5vfrgkqkharqubtp8qs.apps.googleusercontent.com';
 
-const GoogleIcon = () => (
-  <Svg height="22" viewBox="0 0 24 24" width="22">
-    <Path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-    <Path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-    <Path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-    <Path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-  </Svg>
-);
+if (Platform.OS !== 'web') {
+  GoogleSignin.configure({
+    webClientId: WEB_CLIENT_ID,
+    offlineAccess: false,
+  });
+}
 
-const WatermarkIcon = () => (
-  <Svg fill="none" height="400" stroke="#1A2B4C" strokeLinecap="round" strokeLinejoin="round" strokeWidth="0.5" viewBox="0 0 24 24" width="400">
-    <Path d="M12 22c0-4-3-8-8-8c0 4 3 8 8 8Z" />
-    <Path d="M12 22c0-8 6-12 10-12c0 8-6 12-10 12Z" />
-    <Path d="M12 22V10" />
-    <Path d="M12 22H6" />
-    <Path d="M12 18H8" />
-    <Path d="M12 14H10" />
-  </Svg>
-);
 
 export default function LoginScreen() {
   const router = useRouter();
-  const { user, role, status, loading, loginWithEmail } = useAuth();
-  
-  const [modalVisible, setModalVisible] = useState(false);
-  const [inputEmail, setInputEmail] = useState('');
-  const [authLoading, setAuthLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const { user, role, status, loading } = useAuth();
+  const [signingIn, setSigningIn] = useState(false);
 
-  // Handle redirect if user is already logged in
+  // Redirect jika sudah login
   useEffect(() => {
     if (!loading && user && role) {
       if (status === 'pending') {
@@ -59,162 +47,153 @@ export default function LoginScreen() {
     }
   }, [user, role, status, loading]);
 
-  const handlePerformLogin = async (emailToLogin: string) => {
-    const cleanEmail = emailToLogin.trim().toLowerCase();
-    if (!cleanEmail || !cleanEmail.includes('@')) {
-      setErrorMessage('Masukkan alamat email yang valid.');
-      return;
-    }
-
-    setAuthLoading(true);
-    setErrorMessage('');
-
+  const handleGoogleSignIn = async () => {
+    setSigningIn(true);
     try {
-      const result = await loginWithEmail(cleanEmail);
-      setModalVisible(false);
-      
-      if (result.role === 'admin') {
-        router.replace('/(admin)');
+      let firebaseUser;
+
+      if (Platform.OS === 'web') {
+        // Mode Web Browser: Pakai Firebase Popup bawaan
+        const provider = new GoogleAuthProvider();
+        const result = await signInWithPopup(auth, provider);
+        firebaseUser = result.user;
       } else {
-        router.replace('/(parent)');
+        // Mode HP (Android/iOS): Pakai Google Sign-In Native
+        await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+        await GoogleSignin.signIn();
+        const { idToken } = await GoogleSignin.getTokens();
+
+        if (!idToken) {
+          throw new Error('Tidak bisa mendapatkan token Google.');
+        }
+
+        const googleCredential = GoogleAuthProvider.credential(idToken);
+        const result = await signInWithCredential(auth, googleCredential);
+        firebaseUser = result.user;
       }
-    } catch (err: any) {
-      console.error(err);
-      setErrorMessage('Gagal masuk: ' + (err.message || 'Terjadi kesalahan'));
+
+      // === LOGIK DETEKSI ADMIN / ORANG TUA ===
+      // Cek whitelist admin & simpan ke Firestore
+      const emailKey = (firebaseUser.email || '').toLowerCase().trim();
+      const userRef = doc(db, 'users', firebaseUser.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        // User baru: Cek apakah email terdaftar sebagai admin
+        const whitelistSnap = await getDoc(doc(db, 'whitelist_admins', emailKey));
+        if (whitelistSnap.exists()) {
+          // Masuk sebagai Admin
+          await setDoc(userRef, {
+            uid: firebaseUser.uid,
+            name: firebaseUser.displayName || emailKey,
+            email: firebaseUser.email,
+            role: 'admin',
+            status_verifikasi: 'verified',
+            createdAt: new Date().toISOString(),
+          });
+        } else {
+          // Masuk sebagai Orang Tua
+          await setDoc(userRef, {
+            uid: firebaseUser.uid,
+            name: firebaseUser.displayName || emailKey,
+            email: firebaseUser.email,
+            role: 'parent',
+            status_verifikasi: 'verified',
+            createdAt: new Date().toISOString(),
+          });
+        }
+      } else {
+        // User lama: Jika user sudah ada tapi email baru saja dimasukkan ke whitelist → update jadi admin
+        const wlSnap = await getDoc(doc(db, 'whitelist_admins', emailKey));
+        if (wlSnap.exists() && userSnap.data()?.role !== 'admin') {
+          await setDoc(userRef, { role: 'admin', status_verifikasi: 'verified' }, { merge: true });
+        }
+      }
+
+      // AuthContext akan otomatis mendeteksi perubahan state dan me-redirect ke halaman yang tepat
+
+    } catch (error: any) {
+      if (Platform.OS !== 'web' && error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // User membatalkan login di HP
+      } else if (Platform.OS !== 'web' && error.code === statusCodes.IN_PROGRESS) {
+        // Sign-in sedang proses
+      } else if (Platform.OS !== 'web' && error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        Alert.alert('Error', 'Google Play Services tidak tersedia.');
+      } else {
+        console.error('Google Sign-In Error:', error);
+        Alert.alert('Login Gagal', error.message || 'Terjadi kesalahan saat login.');
+      }
     } finally {
-      setAuthLoading(false);
+      setSigningIn(false);
     }
   };
+
+  if (loading) {
+    return (
+      <View style={tw`flex-1 bg-[#031636] items-center justify-center`}>
+        <ActivityIndicator size="large" color="#10b981" />
+        <Text style={tw`text-white/70 text-sm mt-4`}>Memuat aplikasi...</Text>
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={tw`flex-1 bg-[#F0F7F7]`}>
       <View style={tw`flex-1 relative flex-col justify-between overflow-hidden bg-[#F0F7F7]`}>
-        {/* Subtle Watermark Background */}
-        <View style={tw`absolute inset-0 items-center justify-center opacity-5 z-0`}>
-          <View style={{ transform: [{ scale: 2.5 }] }}>
-            <WatermarkIcon />
-          </View>
+        {/* Watermark Background */}
+        <View style={tw`absolute inset-0 items-center justify-center opacity-10 z-0`}>
+          <Image 
+            source={require('../../assets/images/child_watermark.jpg')}
+            style={tw`w-[120%] h-[120%]`}
+            resizeMode="cover"
+          />
         </View>
 
-        {/* Main Content Container */}
-        <View style={tw`relative z-10 flex-col flex-1 px-4 pt-16 pb-10 w-full max-w-md mx-auto justify-between`}>
-          
-          {/* Top Section: Logo & Welcome */}
-          <View style={tw`flex-col items-center mt-8`}>
-            <View style={tw`w-28 h-28 rounded-3xl bg-[#031636] p-4 items-center justify-center shadow-lg`}>
-              <Image 
-                source={{ uri: 'https://lh3.googleusercontent.com/aida/AEtjO1XejXHJ-SLgl282mdHs_T4o6jSFuL_HvMFjUbRvyda4_p9EW-n5NHB30GVI218p2IN-hoBieNJ6J_UbPb6J2uJ6SMRVOrVk5fqh5G-mcDW5tQNFUZE1kDGtZaKZmJo-kn-u2qv9u08DAn9HoycL3mr8IxNfu3WJMWMP7tEJ0UrpKnof1NkA7gjp9B8t0s2wiTU1ntCnBdZvgMErAfXpXpKvnva7zhfemW0ncBsnoAMfr5nesZYuJ-Pp1A' }} 
-                style={tw`w-full h-full`}
-                resizeMode="contain"
-              />
-            </View>
-
-            <View style={tw`items-center mt-6`}>
-              <Text style={tw`text-[26px] text-center font-bold text-[#031636]`}>
-                TumbuhSehat Mobile
-              </Text>
-              <Text style={tw`text-sm text-center text-[#1A2B4C]/70 mt-2 px-4 leading-relaxed`}>
-                Aplikasi Pemantauan Tumbuh Kembang & Pencegahan Stunting Anak Terintegrasi
-              </Text>
-            </View>
-          </View>
-
-          {/* Action Buttons Section */}
-          <View style={tw`w-full space-y-3`}>
-            {/* Primary Google Login Button */}
-            <TouchableOpacity 
-              activeOpacity={0.8}
-              onPress={() => {
-                setErrorMessage('');
-                setInputEmail('');
-                setModalVisible(true);
-              }}
-              style={tw`w-full flex-row items-center justify-center bg-white py-4 px-6 rounded-2xl border border-[#1A2B4C]/10 shadow-sm`}
-            >
-              <GoogleIcon />
-              <Text style={tw`text-base font-bold ml-3 text-[#031636]`}>
-                Masuk dengan Akun Google
-              </Text>
-            </TouchableOpacity>
-
-            <Text style={tw`text-[11px] text-center text-[#1A2B4C]/50 mt-2`}>
-              Admin/Nakes didaftarkan melalui Portal Superadmin Website
+        {/* Main Content */}
+        <View style={tw`relative z-10 flex-1 flex-col px-6 pb-12`}>
+          {/* Top: Logo & Tagline */}
+          <View style={tw`flex-1 items-center justify-center mt-12`}>
+            <Text style={tw`text-4xl font-extrabold text-[#031636] text-center tracking-tight`}>TumbuhSehat</Text>
+            <Text style={tw`text-base text-[#1A2B4C]/70 text-center mt-4 leading-relaxed px-8`}>
+              Pantau Tumbuh Kembang & Cegah Stunting Sejak Dini
             </Text>
           </View>
-          
-        </View>
-      </View>
 
-      {/* LOGIN MODAL */}
-      <Modal
-        visible={modalVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={tw`flex-1 bg-black/60 items-center justify-center p-4`}>
-          <View style={tw`bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl`}>
-            
-            <Text style={tw`text-lg font-bold text-[#031636] text-center mb-1`}>
-              Masuk ke TumbuhSehat
-            </Text>
-            <Text style={tw`text-xs text-[#1A2B4C]/60 text-center mb-5`}>
-              Masukkan email Google yang terdaftar
-            </Text>
-
-            {errorMessage ? (
-              <View style={tw`bg-red-50 p-2.5 rounded-xl mb-3 border border-red-200`}>
-                <Text style={tw`text-xs text-red-600 font-semibold text-center`}>
-                  {errorMessage}
-                </Text>
-              </View>
-            ) : null}
-
-            {/* Email Input */}
-            <View style={tw`mb-4`}>
-              <Text style={tw`text-xs font-bold text-[#031636] mb-1.5`}>
-                Alamat Email Google
-              </Text>
-              <TextInput
-                value={inputEmail}
-                onChangeText={setInputEmail}
-                placeholder="contoh: dokter@gmail.com"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-                style={tw`w-full bg-[#f7f9fb] border border-gray-300 rounded-xl px-3.5 py-3 text-sm text-[#031636]`}
-              />
-            </View>
-
-            {/* Submit Button */}
+          {/* Login Content Area */}
+          <View style={tw`w-full pb-6`}>
+            {/* Google Sign-In Button */}
+            <View style={tw`items-center gap-3 w-full max-w-sm mx-auto`}>
             <TouchableOpacity
-              activeOpacity={0.8}
-              disabled={authLoading}
-              onPress={() => handlePerformLogin(inputEmail)}
-              style={tw`w-full bg-[#10b981] py-3.5 rounded-xl items-center justify-center shadow-md mb-3`}
+              onPress={handleGoogleSignIn}
+              disabled={signingIn}
+              activeOpacity={0.85}
+              style={tw`w-full flex-row items-center justify-center bg-white py-4 px-6 rounded-2xl shadow-md border border-gray-200 gap-3 ${signingIn ? 'opacity-60' : ''}`}
             >
-              {authLoading ? (
-                <ActivityIndicator color="#ffffff" size="small" />
+              {signingIn ? (
+                <>
+                  <ActivityIndicator size="small" color="#031636" />
+                  <Text style={tw`font-bold text-[#031636] text-base`}>Memproses...</Text>
+                </>
               ) : (
-                <Text style={tw`text-white font-bold text-sm`}>
-                  Lanjutkan Masuk
-                </Text>
+                <>
+                  <Svg height="22" viewBox="0 0 24 24" width="22">
+                    <Path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                    <Path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                    <Path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                    <Path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                  </Svg>
+                  <Text style={tw`font-bold text-[#031636] text-base`}>Masuk dengan Akun Google</Text>
+                </>
               )}
             </TouchableOpacity>
 
-            {/* Cancel Button */}
-            <TouchableOpacity
-              onPress={() => setModalVisible(false)}
-              style={tw`w-full py-2.5 items-center justify-center`}
-            >
-              <Text style={tw`text-xs text-gray-500 font-semibold`}>
-                Batal
-              </Text>
-            </TouchableOpacity>
-
+            <Text style={tw`text-xs text-[#1A2B4C]/50 text-center`}>
+              Admin didaftarkan melalui Portal Superadmin • Data aman & terenkripsi
+            </Text>
           </View>
         </View>
-      </Modal>
+        </View>
+      </View>
     </SafeAreaView>
   );
 }

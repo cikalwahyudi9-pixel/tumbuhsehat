@@ -9,7 +9,7 @@ import { useAuth } from '../../context/AuthContext';
 
 export default function AdminDashboard() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const [children, setChildren] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -43,7 +43,17 @@ export default function AdminDashboard() {
       {/* Header */}
       <View style={tw`flex-row items-center px-4 h-16 bg-[#f7f9fb]/90 ${Platform.OS !== 'android' ? 'shadow-sm' : ''}` }>
         <Text style={tw`text-lg font-bold text-[#031636]`}>Admin Dashboard</Text>
-        <TouchableOpacity onPress={() => router.replace('/')} style={tw`ml-auto flex-row items-center gap-2 bg-red-50 px-3 py-1.5 rounded-full border border-red-100`}>
+        <TouchableOpacity 
+          onPress={async () => {
+            await logout();
+            if (Platform.OS === 'web') {
+              window.location.href = '/';
+            } else {
+              router.replace('/');
+            }
+          }} 
+          style={tw`ml-auto flex-row items-center gap-2 bg-red-50 px-3 py-1.5 rounded-full border border-red-100`}
+        >
           <Text style={tw`text-xs font-bold text-red-600`}>Keluar</Text>
           <MaterialIcons name="logout" size={14} color="#dc2626" />
         </TouchableOpacity>

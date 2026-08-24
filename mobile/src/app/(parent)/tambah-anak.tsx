@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, createElement } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, TextInput, Platform, Alert, ActivityIndicator } from 'react-native';
 import tw from 'twrnc';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 import { db } from '../../config/firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import { useAuth } from '../../context/AuthContext';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function TambahAnakScreen() {
   const router = useRouter();
@@ -13,8 +14,22 @@ export default function TambahAnakScreen() {
   
   const [nama, setNama] = useState('');
   const [tanggalLahir, setTanggalLahir] = useState('');
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [dateObj, setDateObj] = useState(new Date());
+  
   const [jenisKelamin, setJenisKelamin] = useState<'Laki-laki' | 'Perempuan' | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const onChangeDate = (event: any, selectedDate?: Date) => {
+    setShowDatePicker(Platform.OS === 'ios');
+    if (selectedDate) {
+      setDateObj(selectedDate);
+      const year = selectedDate.getFullYear();
+      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+      const day = String(selectedDate.getDate()).padStart(2, '0');
+      setTanggalLahir(`${year}-${month}-${day}`);
+    }
+  };
 
   const handleSimpan = async () => {
     if (!nama || !jenisKelamin || !tanggalLahir) {
@@ -89,15 +104,46 @@ export default function TambahAnakScreen() {
           {/* Tanggal Lahir Input */}
           <View style={tw`flex-col`}>
             <Text style={tw`text-sm font-semibold text-[#191c1e] mb-2`}>Tanggal Lahir</Text>
-            <View style={tw`flex-row items-center h-16 bg-white rounded-xl border border-gray-200 px-4 shadow-sm`}>
-              <MaterialIcons name="calendar-today" size={20} color="#44474e" />
-              <TextInput 
-                style={tw`flex-1 h-full text-base text-[#191c1e] px-4`}
-                placeholder="YYYY-MM-DD (Misal: 2023-08-15)"
-                value={tanggalLahir}
-                onChangeText={setTanggalLahir}
+            
+            {Platform.OS === 'web' ? (
+              <View style={tw`flex-row items-center h-16 bg-white rounded-xl border border-gray-200 px-4 shadow-sm`}>
+                {createElement('input', {
+                  type: 'date',
+                  value: tanggalLahir,
+                  onChange: (e: any) => setTanggalLahir(e.target.value),
+                  onClick: (e: any) => {
+                    try {
+                      e.target.showPicker();
+                    } catch (err) {
+                      // fallback for older browsers that don't support showPicker
+                    }
+                  },
+                  style: { flex: 1, height: '100%', border: 'none', outline: 'none', background: 'transparent', fontSize: 16, color: '#191c1e', cursor: 'pointer' }
+                })}
+              </View>
+            ) : (
+              <TouchableOpacity 
+                onPress={() => setShowDatePicker(true)}
+                style={tw`flex-row items-center h-16 bg-white rounded-xl border border-gray-200 px-4 shadow-sm`}
+              >
+                <MaterialIcons name="calendar-today" size={20} color="#44474e" />
+                <Text style={tw`flex-1 text-base px-4 ${tanggalLahir ? 'text-[#191c1e]' : 'text-gray-400'}`}>
+                  {tanggalLahir || 'Pilih Tanggal Lahir'}
+                </Text>
+              </TouchableOpacity>
+            )}
+
+            {showDatePicker && Platform.OS !== 'web' && (
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={dateObj}
+                mode="date"
+                is24Hour={true}
+                display="default"
+                onChange={onChangeDate}
+                maximumDate={new Date()}
               />
-            </View>
+            )}
           </View>
 
           {/* Jenis Kelamin Input */}

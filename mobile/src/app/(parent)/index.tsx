@@ -131,11 +131,19 @@ export default function ParentDashboard() {
             style={tw`w-8 h-8 rounded-full overflow-hidden bg-gray-200`}
             onPress={() => router.push('/(parent)/profil')}
           >
-            <Image 
-              source={require('../../../assets/images/avatar_placeholder.png')}
-              style={tw`w-full h-full`}
-              resizeMode="cover"
-            />
+            {Platform.OS === 'web' && user?.photoURL ? (
+              <img 
+                src={user.photoURL} 
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              <Image 
+                source={user?.photoURL ? { uri: user.photoURL } : require('../../../assets/images/avatar_placeholder.png')}
+                style={tw`w-full h-full bg-[#031636]/10`}
+                resizeMode="cover"
+              />
+            )}
           </TouchableOpacity>
         </View>
       </View>
