@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "79655128399",
+    "project_id": "tumbuh-sehat",
+    "storage_bucket": "tumbuh-sehat.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:79655128399:android:675791b4ee10572a7b893a",
+        "android_client_info": {
+          "package_name": "com.tumbuhsehat.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "79655128399-o9qjm8vmjqoef5vfrgkqkharqubtp8qs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVap6XmREMCL6P6CWlhxMshzvDhcBWpD8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "79655128399-o9qjm8vmjqoef5vfrgkqkharqubtp8qs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
